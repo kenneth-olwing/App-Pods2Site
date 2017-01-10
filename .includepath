@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includepath>
+  <includepathentry path="lib" />
+  <includepathentry path="t\lib" />
+  <includepathentry path="xt\lib" />
+</includepath>
+

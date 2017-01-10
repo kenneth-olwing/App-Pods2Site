@@ -1,0 +1,11 @@
+\.git(ignore|/)
+\.includepath
+\.project
+\.settings/
+HACK/
+MANIFEST\.SKIP
+App-TestOnTap-\d+\.\d\d\d\.tar\.gz
+App-TestOnTap-\d+\.\d\d\d/
+\.ignore/
+Makefile.old
+tmp/
