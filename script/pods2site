@@ -7,6 +7,19 @@ use App::Pods2Site;
 
 $| = 1;
 
+@ARGV =
+	(
+		'--script-include',
+		'regexp(testontap)',
+		'--module-include',
+		"regexp(App::TestOnTap) or regexp(Grep::Query) or regexp(^Ken1) or eq(perlfaq) or regexp{Active(Perl|State)}",
+		'--core-include',
+		"not regexp(.*) or regexp(perlfaq) or eq(pods::perlsyn)",
+		'--pragma-include',
+		"not regexp(.*)",
+		@ARGV,
+	);
+
 # This is very shallow; just pass @ARGV on to the A::TOT entry point
 #
 exit(App::Pods2Site::main(@ARGV));
@@ -17,7 +30,8 @@ __END__
 
 pods2site
 
-The command-line entrypoint to App::Pods2Site, a tool @@TBD@@
+The command-line entrypoint to App::Pods2Site, a tool that creates a trivial HTML site based on all
+the pods it can find.
 
 For a description of valid options and arguments, see the L<App::Pods2Site::Args> documentation.
 

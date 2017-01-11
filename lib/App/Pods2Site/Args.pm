@@ -7,52 +7,35 @@ package App::Pods2Site::Args;
 use strict;
 use warnings;
 
-use App::Pods2Site::Util qw(slashify isDirEmpty);
+use App::Pods2Site::Util qw(slashify readData writeData);
 
 use Getopt::Long qw(GetOptionsFromArray :config require_order no_ignore_case bundling);
 use File::Spec;
 use File::Temp qw(tempdir);
-use File::Slurp qw(write_file read_file);
 use File::Path qw(make_path);
 use Config qw(%Config);
 use Pod::Usage;
 use Pod::Find qw(pod_where);
 use List::MoreUtils qw(uniq);
 use Grep::Query;
-use JSON;
 
 # CTOR
 #
 sub new
 {
 	my $class = shift;
-	my $version = shift;
 
-	my $self = bless
-				(
-					{
-						json => JSON->new()->utf8()->pretty()->canonical(),
-						version => $version,
-					},
-					$class
-				);
-	$self->__parseArgv($version, @_);
+	my $self = bless( {}, $class);
+	$self->__parseArgv(@_);
 
 	return $self;
 }
 
-sub getVersion
+sub getSiteDir
 {
 	my $self = shift;
 	
-	return $self->{version};
-}
-
-sub getOutDir
-{
-	my $self = shift;
-	
-	return $self->{outdir};
+	return $self->{sitedir};
 }
 
 sub getBinDirs
@@ -76,61 +59,68 @@ sub getWorkDir
 	return $self->{workdir};
 }
 
-sub includeScriptNames
+sub getFilter
 {
 	my $self = shift;
+	my $section = shift;
 	
-	return $self->__includeNames('script-include', @_);
+	return $self->{"${section}filter"};
 }
-
-sub getIncludeScriptNamesText
-{
-	my $self = shift;
-	
-	return $self->{'script-include-text'};
-}
-
-sub includeCoreNames
-{
-	my $self = shift;
-	
-	return $self->__includeNames('core-include', @_);
-}
-	
-sub getIncludeCoreNamesText
-{
-	my $self = shift;
-	
-	return $self->{'core-include-text'};
-}
-
-sub includePragmaNames
-{
-	my $self = shift;
-	
-	return $self->__includeNames('pragma-include', @_);
-}
-
-sub getIncludePragmaNamesText
-{
-	my $self = shift;
-	
-	return $self->{'pragma-include-text'};
-}
-
-sub includeModuleNames
-{
-	my $self = shift;
-	
-	return $self->__includeNames('module-include', @_);
-}
-
-sub getIncludeModuleNamesText
-{
-	my $self = shift;
-	
-	return $self->{'module-include-text'};
-}
+#sub includeScriptNames
+#{
+#	my $self = shift;
+#	
+#	return $self->__includeNames('script-include', @_);
+#}
+#
+#sub getIncludeScriptNamesText
+#{
+#	my $self = shift;
+#	
+#	return $self->{'script-include-text'};
+#}
+#
+#sub includeCoreNames
+#{
+#	my $self = shift;
+#	
+#	return $self->__includeNames('core-include', @_);
+#}
+#	
+#sub getIncludeCoreNamesText
+#{
+#	my $self = shift;
+#	
+#	return $self->{'core-include-text'};
+#}
+#
+#sub includePragmaNames
+#{
+#	my $self = shift;
+#	
+#	return $self->__includeNames('pragma-include', @_);
+#}
+#
+#sub getIncludePragmaNamesText
+#{
+#	my $self = shift;
+#	
+#	return $self->{'pragma-include-text'};
+#}
+#
+#sub includeModuleNames
+#{
+#	my $self = shift;
+#	
+#	return $self->__includeNames('module-include', @_);
+#}
+#
+#sub getIncludeModuleNamesText
+#{
+#	my $self = shift;
+#	
+#	return $self->{'module-include-text'};
+#}
 
 sub getCSS
 {
@@ -150,29 +140,31 @@ sub isVerboseLevel
 # PRIVATE
 #
 
-sub __includeNames
-{
-	my $self = shift;
-	my $section = shift;
-	my @names = @_;
-
-	return
-		$self->{$section}
-			? $self->{$section}->qgrep(@names)
-			: @names;
-}
+#sub __includeNames
+#{
+#	my $self = shift;
+#	my $section = shift;
+#	my @names = @_;
+#
+#	return
+#		$self->{$section}
+#			? $self->{$section}->qgrep(@names)
+#			: @names;
+#}
 
 sub __parseArgv
 {
 	my $self = shift;
-	my $version = shift;
 	my @argv = @_;
 
-	my @persistOpts =
+	# these options are persisted to the site
+	# and can't be used when updating
+	#	
+	my @stickyOpts =
 		qw
 			(
-				bindir
-				libdir
+				bindirectory
+				libdirectory
 				script-include
 				core-include
 				pragma-include
@@ -182,20 +174,25 @@ sub __parseArgv
 		
 	my %rawOpts =
 		(
-			outdir => undef,
+			usage => 0,
+			help => 0,
+			manual => 0,
 			v => 0,
-			workdir => undef,
+			workdirectory => undef,
 			quiet => 0,
 		);
 		
 	my @specs =
 		(
-			'outdir=s',
+			'usage|?',
+			'help',
+			'manual',
+			'version',
 			'v|verbose+',
-			'workdir=s',
+			'workdirectory=s',
 			'quiet',
-			'bindir=s@',
-			'libdir=s@',
+			'bindirectory=s@',
+			'libdirectory=s@',
 			'script-include=s',
 			'core-include=s',
 			'pragma-include=s',
@@ -204,6 +201,7 @@ sub __parseArgv
 		);
 
 	my $argsPodInput = pod_where( { -inc => 1 }, 'App::Pods2Site::Args');
+	my $manualPodInput = pod_where( { -inc => 1 }, 'App::TestOnTap');
 
 	# for consistent error handling below, trap getopts problems
 	# 
@@ -217,37 +215,55 @@ sub __parseArgv
 		pod2usage(-input => $argsPodInput, -message => "Failure parsing options:\n  $@", -exitval => 255, -verbose => 0);
 	}
 
-	die("You must provide --outdir\n") unless defined($rawOpts{outdir});
-	my $outdir = slashify(File::Spec->rel2abs($rawOpts{outdir}));
-	my $pfname = $self->__persistFileName();
-	my $persistFile = slashify($outdir . "/$pfname"); 
-	if (-e $outdir && !isDirEmpty($outdir, [$pfname]))
+	# if any of the doc switches made, display the pod
+	#
+	pod2usage(-input => $manualPodInput, -exitval => 0, -verbose => 2, -noperldoc => 1) if $rawOpts{manual};
+	pod2usage(-input => $argsPodInput, -exitval => 0, -verbose => 2, -noperldoc => 1) if $rawOpts{help};
+	pod2usage(-input => $argsPodInput, -exitval => 0, -verbose => 0) if $rawOpts{usage};
+	pod2usage(-message => "$0 version $App::Pods2Site::VERSION", -exitval => 0, -verbose => 99, -sections => '_') if $rawOpts{version};
+
+	# manage the sitedir
+	#
+	my $sitedir = $argv[0];
+	die("You must provide a sitedir\n") unless $sitedir;
+	$sitedir = slashify(File::Spec->rel2abs($sitedir));
+	if (-e $sitedir)
 	{
-		die("The output '$outdir' exists, but is not a directory\n") unless -d $outdir;
-		die("The output '$outdir' exists, but is missing our marker file\n") unless -f $persistFile;
-		print "NOTE: reusing options from '$persistFile'!\n";
-		foreach my $opt (@persistOpts)
+		# if the sitedir exists as a dir, our sticky opts better be found in it
+		# otherwise it's not a sitedir
+		#
+		die("The output '$sitedir' exists, but is not a directory\n") unless -d $sitedir;
+		my $savedOpts = readData($sitedir, 'opts');
+		die("The sitedir '$sitedir' exists, but is missing our marker file\n") unless $savedOpts;
+
+		# clean up any sticky opts given by the user
+		#
+		print "NOTE: reusing options used when creating '$sitedir'!\n";
+		foreach my $opt (@stickyOpts)
 		{
-			die("Some options can't be used when updating an existing -outdir '$outdir' (option '$opt' found)\n") if exists($rawOpts{$opt});
+			warn("WARNING: The option '$opt' can't be used when updating the existing site '$sitedir' - ignoring\n") if exists($rawOpts{$opt});
+			delete($rawOpts{$opt});
 		}
-		my $po = $self->__readOpts($persistFile);
-		%rawOpts = ( %rawOpts, %$po );
+		%rawOpts = ( %rawOpts, %$savedOpts );
 	}
 	else
 	{
-		if (!-d $outdir)
-		{
-			mkdir($outdir) || die("Failed to create -outdir '$outdir': $!\n");
-		}
-		my %po = map { $_ => $rawOpts{$_} } @persistOpts;
-		$self->__writeOpts($persistFile, \%po);
+		# create the sitedir and persist our sticky options
+		#
+		make_path($sitedir) || die("Failed to create sitedir '$sitedir': $!\n");
+		my %opts2save = map { $_ => $rawOpts{$_} } @stickyOpts;
+		writeData($sitedir, 'opts', \%opts2save);
 	}
-	$self->{outdir} = $outdir;
+	$self->{sitedir} = $sitedir;
 	
+	# fix up any user given bindir locations or get us the standard ones
+	#
 	my @bindirs = uniq($self->__getBinLocations($rawOpts{bindir}));
 	warn("WARNING: No bin directories found\n") unless @bindirs;
 	$self->{bindirs} = \@bindirs;
 
+	# fix up any user given libdir locations or get us the standard ones
+	#
 	my @libdirs = uniq($self->__getLibLocations($rawOpts{libdir}));
 	warn("WARNING: No lib directories found\n") unless @libdirs;
 	$self->{libdirs} = \@libdirs;
@@ -276,11 +292,10 @@ sub __parseArgv
 	eval
 	{
 		my $inc = $rawOpts{'script-include'};
-		$self->{'script-include'} =
+		$self->{scriptfilter} =
 			defined($inc)
 				? Grep::Query->new($inc)
 				: undef;
-		$self->{'script-include-text'} = $inc;
 	};
 	if ($@)
 	{
@@ -292,11 +307,10 @@ sub __parseArgv
 	eval
 	{
 		my $inc = $rawOpts{'core-include'};
-		$self->{'core-include'} =
+		$self->{'corefilter'} =
 			defined($inc)
 				? Grep::Query->new($inc)
 				: undef;
-		$self->{'core-include-text'} = $inc;
 	};
 	if ($@)
 	{
@@ -308,11 +322,10 @@ sub __parseArgv
 	eval
 	{
 		my $inc = $rawOpts{'pragma-include'};
-		$self->{'pragma-include'} =
+		$self->{pragmafilter} =
 			defined($inc)
 				? Grep::Query->new($inc)
 				: undef;
-		$self->{'pragma-include-text'} = $inc;
 	};
 	if ($@)
 	{
@@ -324,24 +337,27 @@ sub __parseArgv
 	eval
 	{
 		my $inc = $rawOpts{'module-include'};
-		$self->{'module-include'} =
+		$self->{modulefilter} =
 			defined($inc)
 				? Grep::Query->new($inc)
 				: undef;
-		$self->{'module-include-text'} = $inc;
 	};
 	if ($@)
 	{
 		pod2usage(-message => "Failure creating module-include filter:\n  $@", -exitval => 255, -verbose => 0);
 	}
-	
+
+	# fix up any css path given by user
+	#	
 	my $css = slashify(File::Spec->rel2abs($rawOpts{css})) if $rawOpts{css};
 	if ($css)
 	{
 		die("No such file: -css '$css'\n") unless -f $css;
 		$self->{css} = $css
 	}
-		
+	
+	# if -quiet has been given, it trumps any verbosity
+	#	
 	$self->{verbose} = $rawOpts{quiet} ? -1 : $rawOpts{v};
 }
 
@@ -350,6 +366,9 @@ sub __getBinLocations
 	my $self = shift;
 	my $argLocs = shift;
 	
+	# if the user provided any bin locations, interpret them
+	# otherwise return the default places
+	#
 	my @locs;
 	if (defined($argLocs))
 	{
@@ -376,7 +395,9 @@ sub __getBinLocations
 	{
 		@locs = $self->__getDefaultBinLocations();
 	}
-	
+
+	# ensure all paths are absolute and clean
+	#	
 	$_ = slashify(File::Spec->rel2abs($_)) foreach (@locs);
 	
 	return @locs;
@@ -387,6 +408,9 @@ sub __getLibLocations
 	my $self = shift;
 	my $argLocs = shift;
 	
+	# if the user provided any lib locations, interpret them
+	# otherwise return the default places
+	#
 	my @locs;
 	if (defined($argLocs))
 	{
@@ -418,6 +442,8 @@ sub __getLibLocations
 		@locs = $self->__getDefaultLibLocations();
 	}
 	
+	# ensure all paths are absolute and clean
+	#	
 	$_ = slashify(File::Spec->rel2abs($_)) foreach (@locs);
 
 	return @locs;
@@ -427,6 +453,9 @@ sub __getDefaultBinLocations
 {
 	my $self = shift;
 
+	# a somewhat guessed list for Config keys for scripts...
+	# note: order is important
+	#
 	return $self->__getConfigLocations
 		(
 			qw
@@ -445,6 +474,9 @@ sub __getDefaultLibLocations
 {
 	my $self = shift;
 	
+	# a somewhat guessed list for Config keys for lib locations...
+	# note: order is important
+	#
 	return $self->__getConfigLocations
 		(
 			qw
@@ -464,6 +496,8 @@ sub __getConfigLocations
 	my $self = shift;
 	my @cfgnames = @_;
 
+	# the keys don't always contain anything useful
+	#
 	my @locs;
 	foreach my $loc (@cfgnames)
 	{
@@ -477,30 +511,6 @@ sub __getConfigLocations
 	}	
 	
 	return @locs;
-}
-
-sub __persistFileName
-{
-	return '.pods2site-opts';
-}
-
-sub __writeOpts
-{
-	my $self = shift;
-	my $file = shift;
-	my $opts = shift;
-	
-	write_file($file, $self->{json}->encode($opts)) || die("Failed to write '$file': $!\n");
-}
-
-sub __readOpts
-{
-	my $self = shift;
-	my $file = shift;
-	
-	my $txt = read_file($file) || die("Failed to read '$file': $!\n");
-	
-	return $self->{json}->decode($txt);
 }
 
 1;

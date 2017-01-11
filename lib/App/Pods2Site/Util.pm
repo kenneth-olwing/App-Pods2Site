@@ -9,12 +9,19 @@ use Exporter qw(import);
 our @EXPORT_OK =
 	qw
 		(
-			slashify
-			isDirEmpty
 			$IS_WINDOWS
+			slashify
+			readData
+			writeData
+			createSpinner
 		);
 
-my $file_sep = $IS_WINDOWS ? '\\' : '/';
+use JSON;
+
+my $FILE_SEP = $IS_WINDOWS ? '\\' : '/';
+my $DATAFILE = '.pods2site';
+my $JSON = JSON->new()->utf8()->pretty()->canonical();
+my @SPINNERPOSITIONS = ('|', '/', '-', '\\', '-');
 
 # pass in a path and ensure it contains the native form of slash vs backslash
 # (or force either one)
@@ -22,7 +29,7 @@ my $file_sep = $IS_WINDOWS ? '\\' : '/';
 sub slashify
 {
 	my $s = shift;
-	my $fsep = shift || $file_sep;
+	my $fsep = shift || $FILE_SEP;
 
 	my $dblStart = $s =~ s#^[\\/]{2}##;
 	$s =~ s#[/\\]+#$fsep#g;
@@ -30,21 +37,60 @@ sub slashify
 	return $dblStart ? "$fsep$fsep$s" : $s;
 }
 
-sub isDirEmpty
+sub writeData
 {
 	my $dir = shift;
-	my %ignore = map { $_ => 1 } @{shift || []};
+	my $section = shift;
+	my $data = shift;
 	
-	opendir(my $dh, $dir) or die("Failed to opendir '$dir': $!\n");
-	my @entries = grep(!/^\.\.?$/, readdir($dh));
-	close($dh);
+	my $allData = readData($dir) || {};
+	$allData->{$section} = $data;
 	
-	foreach my $e (@entries)
+	my $df = slashify("$dir/$DATAFILE");
+	open (my $fh, '> :raw :bytes', $df) or die("Failed to open '$df': $!\n");
+	print $fh $JSON->encode($allData);
+	close($fh);  
+}
+
+sub readData
+{
+	my $dir = shift;
+	my $section = shift;
+
+	my $data;
+
+	my $df = slashify("$dir/$DATAFILE");
+	if (-f $df)
 	{
-		return 0 unless $ignore{$e};
+		open (my $fh, '< :raw :bytes', $df) or die("Failed to open '$df': $!\n");
+		my $buf;
+		my $szExpected = -s $df;
+		my $szRead = read($fh, $buf, -s $df);
+		die("Failed to read from '$df': $!\n") unless ($szRead && $szRead == $szExpected); 
+		close($fh);
+		$data = $JSON->decode($buf);
+		$data = $data->{$section} if $section;
+	}
+
+	return $data;
+}
+
+sub createSpinner
+{
+	my $args = shift;
+
+	my $spinner = sub {};
+	if (-t STDOUT && $args->isVerboseLevel(0) && !$args->isVerboseLevel(2))
+	{
+		my $pos = 0;
+		$spinner = sub
+			{
+				print ".$SPINNERPOSITIONS[$pos++].\r";
+				$pos = 0 if $pos > $#SPINNERPOSITIONS;
+			};
 	}
 	
-	return 1;	
+	return $spinner;
 }
 
 1;
