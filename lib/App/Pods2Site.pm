@@ -13,7 +13,6 @@ use App::Pods2Site::Args;
 use App::Pods2Site::PodFinder;
 use App::Pods2Site::PodCopier;
 use App::Pods2Site::Pod2HTML;
-use App::Pods2Site::SiteBuilder;
 use App::Pods2Site::Util qw(slashify);
 
 use Cwd;
@@ -44,32 +43,15 @@ sub main
 	my $podCopier = App::Pods2Site::PodCopier->new($args, $podFinder);
 	print "Prepared ", $podCopier->getCount(), " files\n" if $args->isVerboseLevel(0);
 
-	my $incss = $args->getCSS();
-	my $bncss;
-	if ($incss)
-	{
-		my $sitedir = $args->getSiteDir();
-		$bncss = basename($incss);
-		my $outcss = slashify("$sitedir/$bncss");
-		my $mtimeIn = (stat($incss))[9];
-		my $mtimeOut = -e $outcss ? (stat($outcss))[9] : 0; 
+	my $sitebuilder = $args->getSiteBuilder(); 
 
-		if ($mtimeIn > $mtimeOut)
-		{
-			copy($incss, $outcss) || die("Failed to copy CSS '$incss' => '$outcss': $!\n");
-			print "Copied CSS\n" if $args->isVerboseLevel(0);
-		}
-		else
-		{
-			print "Skipping uptodate CSS\n" if $args->isVerboseLevel(0);
-		}
-	}
+	$sitebuilder->prepareCss($args);
 
 	print "Generating HTML from pods\n" if $args->isVerboseLevel(0);
-	my $pod2html = App::Pods2Site::Pod2HTML->new($args, $podCopier, $bncss);
+	my $pod2html = App::Pods2Site::Pod2HTML->new($args, $podCopier);
 	print "Generated ", $pod2html->getGenerated(), " documents (", $pod2html->getUptodate(), " up to date)\n" if $args->isVerboseLevel(0);
 
-	my $sitebuilder = App::Pods2Site::SiteBuilder->new($args, $pod2html, $bncss);
+	$sitebuilder->makeSite($args, $pod2html);
 	print "Completed site in ", $args->getSiteDir(), "\n" if $args->isVerboseLevel(0);
 
 	chdir($cwd);

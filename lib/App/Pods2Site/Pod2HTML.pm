@@ -16,10 +16,9 @@ sub new
 	my $class = shift;
 	my $args = shift;
 	my $podCopier = shift;
-	my $css = shift;
 
 	my $self = bless( { generated => 0, uptodate => 0 }, $class);
-	$self->__updateHTML($args, $podCopier, $css);
+	$self->__updateHTML($args, $podCopier);
 
 	return $self;
 }
@@ -53,7 +52,6 @@ sub __updateHTML
 	my $self = shift;
 	my $args = shift;
 	my $podCopier = shift;
-	my $css = shift;
 	
 	my $t2i = $podCopier->getT2I();
 	
@@ -108,9 +106,9 @@ sub __updateHTML
 							"--outfile=$outfile",
 							"--podroot=$podroot",
 							"--podpath=$podpath",
-							"--htmlroot=$htmlroot"
+							"--htmlroot=$htmlroot",
+							"--css=$htmlroot/../pods2site.css",
 						);
-					push(@p2hargs, "--css=$htmlroot/../$css") if $css;
 					if (!$args->isVerboseLevel(2))
 					{
 						push(@p2hargs, '--quiet');

@@ -68,7 +68,7 @@ sub __copyPods
 	# copy pods from each category
 	#
 	my $coren2p = $podFinder->getCoreN2P();
-	foreach my $name (keys(%$coren2p))
+	foreach my $name (sort { lc($a) cmp lc($b) } (keys(%$coren2p)))
 	{
 		my $type = '1-core';
 		my $alias = $name;
@@ -85,7 +85,7 @@ sub __copyPods
 	}
 	
 	my $pragman2p = $podFinder->getPragmaN2P();
-	foreach my $name (keys(%$pragman2p))
+	foreach my $name (sort { lc($a) cmp lc($b) } (keys(%$pragman2p)))
 	{
 		my $type = '2-pragma';
 		my $p = $pragman2p->{$name};
@@ -98,7 +98,7 @@ sub __copyPods
 	}
 	
 	my $modulen2p = $podFinder->getModuleN2P();
-	foreach my $name (keys(%$modulen2p))
+	foreach my $name (sort { lc($a) cmp lc($b) } (keys(%$modulen2p)))
 	{
 		my $type = '3-module';
 		my $p = $modulen2p->{$name};
@@ -111,7 +111,7 @@ sub __copyPods
 	}
 
 	my $scriptn2p = $podFinder->getScriptN2P();
-	foreach my $name (keys(%$scriptn2p))
+	foreach my $name (sort { lc($a) cmp lc($b) } (keys(%$scriptn2p)))
 	{
 		my $type = '4-script';
 		my $p = $scriptn2p->{$name};

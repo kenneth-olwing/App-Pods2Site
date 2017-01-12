@@ -59,6 +59,7 @@ WriteMakefile(
 			$eumm_understands_conf_and_test_requires_properly
 				? ()
 				: ( %$configure_requires, %$test_requires ),
+			'Grep::Query' => '1.004',
 # @@TBD@@
 		},
 	dist  =>

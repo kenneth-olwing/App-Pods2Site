@@ -8,6 +8,7 @@ use strict;
 use warnings;
 
 use App::Pods2Site::Util qw(slashify readData writeData);
+use App::Pods2Site::SiteBuilderFactory;
 
 use Getopt::Long qw(GetOptionsFromArray :config require_order no_ignore_case bundling);
 use File::Spec;
@@ -74,6 +75,13 @@ sub getCSS
 	return $self->{css};
 }
 
+sub getSiteBuilder
+{
+	my $self = shift;
+	
+	return $self->{sitebuilder};
+}
+
 sub isVerboseLevel
 {
 	my $self = shift;
@@ -103,6 +111,7 @@ sub __parseArgv
 				pragma-include
 				module-include
 				css
+				style
 			);
 		
 	my %rawOpts =
@@ -131,6 +140,7 @@ sub __parseArgv
 			'pragma-include=s',
 			'module-include=s',
 			'css=s',
+			'style=s',
 		);
 
 	my $argsPodInput = pod_where( { -inc => 1 }, 'App::Pods2Site::Args');
@@ -156,12 +166,15 @@ sub __parseArgv
 	pod2usage(-message => "$0 version $App::Pods2Site::VERSION", -exitval => 0, -verbose => 99, -sections => '_') if $rawOpts{version};
 
 	# manage the sitedir
+	# assume we need to create it
 	#
+	my $newSiteDir = 1;
 	my $sitedir = $argv[0];
 	die("You must provide a sitedir\n") unless $sitedir;
 	$sitedir = slashify(File::Spec->rel2abs($sitedir));
 	if (-e $sitedir)
 	{
+		$newSiteDir = 0;
 		# if the sitedir exists as a dir, our sticky opts better be found in it
 		# otherwise it's not a sitedir
 		#
@@ -174,32 +187,23 @@ sub __parseArgv
 		print "NOTE: reusing options used when creating '$sitedir'!\n";
 		foreach my $opt (@stickyOpts)
 		{
-			warn("WARNING: The option '$opt' can't be used when updating the existing site '$sitedir' - ignoring\n") if exists($rawOpts{$opt});
+			warn("WARNING: The option '$opt' ignored when updating the existing site '$sitedir'\n") if exists($rawOpts{$opt});
 			delete($rawOpts{$opt});
 		}
 		%rawOpts = ( %rawOpts, %$savedOpts );
 	}
-	else
-	{
-		# create the sitedir and persist our sticky options
-		#
-		make_path($sitedir) || die("Failed to create sitedir '$sitedir': $!\n");
-		my %opts2save = map { $_ => $rawOpts{$_} } @stickyOpts;
-		writeData($sitedir, 'opts', \%opts2save);
-	}
-	$self->{sitedir} = $sitedir;
 	
 	# fix up any user given bindir locations or get us the standard ones
 	#
-	my @bindirs = uniq($self->__getBinLocations($rawOpts{bindir}));
+	my @bindirs = uniq($self->__getBinLocations($rawOpts{bindirectory}));
 	warn("WARNING: No bin directories found\n") unless @bindirs;
-	$self->{bindirs} = \@bindirs;
+	$self->{bindirs} = $rawOpts{bindirectory} = \@bindirs;
 
 	# fix up any user given libdir locations or get us the standard ones
 	#
-	my @libdirs = uniq($self->__getLibLocations($rawOpts{libdir}));
+	my @libdirs = uniq($self->__getLibLocations($rawOpts{libdirectory}));
 	warn("WARNING: No lib directories found\n") unless @libdirs;
-	$self->{libdirs} = \@libdirs;
+	$self->{libdirs} = $rawOpts{libdirectory} = \@libdirs;
 
 	my $workdir;
 	if ($rawOpts{workdir})
@@ -287,12 +291,29 @@ sub __parseArgv
 	{
 		die("No such file: -css '$css'\n") unless -f $css;
 		
-		$self->{css} = $css
+		$self->{css} = $css;
 	}
+
+	my $sbf = App::Pods2Site::SiteBuilderFactory->new($rawOpts{style});
+	$rawOpts{style} = $sbf->getRealStyle();
+	$self->{sitebuilder} = $sbf->createSiteBuilder();
 	
 	# if -quiet has been given, it trumps any verbosity
 	#	
 	$self->{verbose} = $rawOpts{quiet} ? -1 : $rawOpts{v};
+
+	# if we need to create the site dir...
+	#
+	if ($newSiteDir)
+	{	
+		# ...do it and persist the sticky options
+		#
+		make_path($sitedir) || die("Failed to create sitedir '$sitedir': $!\n");
+		my %opts2save = map { $_ => $rawOpts{$_} } @stickyOpts;
+		writeData($sitedir, 'opts', \%opts2save);
+	}
+	
+	$self->{sitedir} = $sitedir;
 }
 
 sub __getBinLocations
