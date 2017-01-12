@@ -7,20 +7,6 @@ use App::Pods2Site;
 
 $| = 1;
 
-@ARGV =
-	(
-		'--script-include',
-		'regexp(testontap)',
-		'--module-include',
-		"regexp(App::TestOnTap) or regexp(Grep::Query) or regexp(^Ken1) or eq(perlfaq) or regexp{Active(Perl|State)}",
-		'--core-include',
-		"not regexp(.*) or regexp(perlfaq) or eq(pods::perlsyn)",
-		'--pragma-include',
-		"not regexp(.*)",
-		'--css', 'c:/tmp/style.css',
-		@ARGV,
-	);
-
 # This is very shallow; just pass @ARGV on to the A::TOT entry point
 #
 exit(App::Pods2Site::main(@ARGV));

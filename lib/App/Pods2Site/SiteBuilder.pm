@@ -50,17 +50,24 @@ sub __updateMain
 	$scannedLocations .= "&emsp;$_<br/>" foreach ($args->getBinDirs(), $args->getLibDirs());
 	$scannedLocations = "<p><strong>Scanned locations:</strong><br/>$scannedLocations</p>\n";
 	
-	my $coreQuery = $args->getFilter('core')->getQuery() || '';
-	$coreQuery = "<p><strong>Core query:</strong><br/>&emsp;$coreQuery</br></p>" if $coreQuery;
-	my $scriptQuery = $args->getFilter('script')->getQuery() || '';
-	$scriptQuery = "<p><strong>Script query:</strong><br/>&emsp;$scriptQuery</br></p>" if $scriptQuery;
-	my $pragmaQuery = $args->getFilter('pragma')->getQuery() || '';
-	$pragmaQuery = "<p><strong>Pragma query:</strong><br/>&emsp;$pragmaQuery</br></p>" if $pragmaQuery;
-	my $moduleQuery = $args->getFilter('module')->getQuery() || '';
-	$moduleQuery = "<p><strong>Module query:</strong><br/>&emsp;$moduleQuery</br></p>" if $moduleQuery;
+	my $coreFilter = $args->getFilter('core');
+	my $coreQuery = $coreFilter ? $coreFilter->getQuery() : '(no core query)';
+	$coreQuery = "<p><strong>Core query:</strong><br/>&emsp;$coreQuery</br></p>";
+
+	my $scriptFilter = $args->getFilter('script');
+	my $scriptQuery = $scriptFilter ? $scriptFilter->getQuery() : '(no script query)';
+	$scriptQuery = "<p><strong>Script query:</strong><br/>&emsp;$scriptQuery</br></p>";
+
+	my $pragmaFilter = $args->getFilter('pragma');
+	my $pragmaQuery = $pragmaFilter ? $pragmaFilter->getQuery() : '(no pragma query)';
+	$pragmaQuery = "<p><strong>Pragma query:</strong><br/>&emsp;$pragmaQuery</br></p>";
+
+	my $moduleFilter = $args->getFilter('module');
+	my $moduleQuery = $moduleFilter ? $moduleFilter->getQuery() : '(no module query)';
+	$moduleQuery = "<p><strong>Module query:</strong><br/>&emsp;$moduleQuery</br></p>";
 	
-	my $actualCSS = $args->getCSS() || '';
-	$actualCSS = "<p><strong>CSS:</strong><br/>&emsp;$actualCSS<br/></p>" if $actualCSS;
+	my $actualCSS = $args->getCSS() || '(no css)';
+	$actualCSS = "<p><strong>CSS:</strong><br/>&emsp;$actualCSS<br/></p>";
 	
 	my $sitedir = $args->getSiteDir();
 	my $savedTS = readData($sitedir, 'timestamps') || [];
@@ -159,7 +166,7 @@ sub __updateTOC
 		my $p = $coren2h->{$n};
 		$p =~ s#\Q$sitedir\E.##;
 		$p = slashify($p, '/');
-		$core .= qq(<a href="$p" target="main_frame">$n</a><br/>\n);
+		$core .= qq(<a href="$p" target="main_frame"><small>$n</small></a><br/>\n);
 	}
 	chomp($core);
 	$core = qq(<strong>Core</strong><br/><br/>\n$core<br/><hr/>) if $core;
@@ -186,11 +193,11 @@ sub __updateTOC
 				{
 					$p =~ s#\Q$sitedir\E.##;
 					$p = slashify($p, '/');
-					$$ref .= qq(<a href="$p" target="main_frame">$np</a><br/>\n);
+					$$ref .= qq(<a href="$p" target="main_frame"><small>$np</small></a><br/>\n);
 				}
 				else
 				{
-					$$ref .= qq($np<br/>\n);
+					$$ref .= qq(<small>$np</small><br/>\n);
 				}
 			}
 			foreach my $subnp (sort { lc($a) cmp lc($b) } (keys(%$treeloc)))
