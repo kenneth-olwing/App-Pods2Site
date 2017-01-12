@@ -62,7 +62,7 @@ sub __scan
 
 	# set up some progress feedback
 	#
-	my $spinner = createSpinner();
+	my $spinner = createSpinner($args);
 	my $cb = sub
 		{
 			my $p = shift;

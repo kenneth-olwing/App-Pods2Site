@@ -17,6 +17,7 @@ $| = 1;
 		"not regexp(.*) or regexp(perlfaq) or eq(pods::perlsyn)",
 		'--pragma-include',
 		"not regexp(.*)",
+		'--css', 'c:/tmp/style.css',
 		@ARGV,
 	);
 

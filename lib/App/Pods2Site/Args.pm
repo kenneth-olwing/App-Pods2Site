@@ -66,61 +66,6 @@ sub getFilter
 	
 	return $self->{"${section}filter"};
 }
-#sub includeScriptNames
-#{
-#	my $self = shift;
-#	
-#	return $self->__includeNames('script-include', @_);
-#}
-#
-#sub getIncludeScriptNamesText
-#{
-#	my $self = shift;
-#	
-#	return $self->{'script-include-text'};
-#}
-#
-#sub includeCoreNames
-#{
-#	my $self = shift;
-#	
-#	return $self->__includeNames('core-include', @_);
-#}
-#	
-#sub getIncludeCoreNamesText
-#{
-#	my $self = shift;
-#	
-#	return $self->{'core-include-text'};
-#}
-#
-#sub includePragmaNames
-#{
-#	my $self = shift;
-#	
-#	return $self->__includeNames('pragma-include', @_);
-#}
-#
-#sub getIncludePragmaNamesText
-#{
-#	my $self = shift;
-#	
-#	return $self->{'pragma-include-text'};
-#}
-#
-#sub includeModuleNames
-#{
-#	my $self = shift;
-#	
-#	return $self->__includeNames('module-include', @_);
-#}
-#
-#sub getIncludeModuleNamesText
-#{
-#	my $self = shift;
-#	
-#	return $self->{'module-include-text'};
-#}
 
 sub getCSS
 {
@@ -139,18 +84,6 @@ sub isVerboseLevel
 
 # PRIVATE
 #
-
-#sub __includeNames
-#{
-#	my $self = shift;
-#	my $section = shift;
-#	my @names = @_;
-#
-#	return
-#		$self->{$section}
-#			? $self->{$section}->qgrep(@names)
-#			: @names;
-#}
 
 sub __parseArgv
 {
@@ -353,6 +286,7 @@ sub __parseArgv
 	if ($css)
 	{
 		die("No such file: -css '$css'\n") unless -f $css;
+		
 		$self->{css} = $css
 	}
 	
