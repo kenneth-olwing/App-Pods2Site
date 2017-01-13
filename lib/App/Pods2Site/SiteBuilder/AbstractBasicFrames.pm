@@ -44,7 +44,7 @@ sub __updateMain
 	my $z = slashify($0);
 	my $builtBy = "<p><strong>This site built using:</strong><br/>";
 	$builtBy .= "&emsp;$z ($App::Pods2Site::VERSION)<br/>";
-	$builtBy .= "&emsp;$^X<br/>\n";
+	$builtBy .= "&emsp;$^X ($])<br/>\n";
 	$builtBy .= "</p>\n";
 	
 	my $style = "<p><strong>Style:</strong><br/>";
