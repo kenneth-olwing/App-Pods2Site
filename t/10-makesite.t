@@ -21,7 +21,7 @@ my @expectedSite1 =
 	(
 		"$site1/pod2html/3-module/Helloworld.html",
 		"$site1/pod2html/3-module/Helloworld/sub/Helloworld2.html",
-		"$site1/pod2html/4-script/Helloworld.html",
+		"$site1/pod2html/4-script/helloworld.html",
 	);
 my @notExpectedSite1 =
 	(
@@ -38,7 +38,7 @@ is($ret, 0, "Created $site2");
 my @expectedSite2 =
 	(
 		"$site2/pod2html/3-module/Bad.html",
-		"$site2/pod2html/4-script/Helloworld.html",
+		"$site2/pod2html/4-script/helloworld.html",
 	);
 my @notExpectedSite2 =
 	(
