@@ -101,16 +101,16 @@ It uses 'style' names to select different internal implementations. The followin
 
 =item * :std
 
-This special name will use the currently defined default style. At present this is 'basicframes-tree-toc'.
-
-=item * basicframes-tree-toc
-
-This style uses a simple frames layout, but the TOC is implemented with the HTML5 'details' element in order
-to create a simple open/close tree control.
+This special name will use the currently defined default style. At present this is 'basicframes-simple-toc'.
 
 =item * basicframes-simple-toc
 
-This style is very similar to the above, but the TOC is rendered as a static long indented list. 
+This style uses a simple frames layout. The left-hand TOC is implemented as a static indented tree list.
+
+=item * basicframes-tree-toc
+
+This style is very similar to the above, but the TOC is rendered with the HTML5 'details' element
+in order to create a simple open/close tree control. May need a newer browser to display correctly.
 
 =back
 
