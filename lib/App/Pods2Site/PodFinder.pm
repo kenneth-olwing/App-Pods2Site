@@ -103,10 +103,10 @@ sub __scan
 	my (@coreNames, @pragmaNames, @moduleNames);
 	foreach my $name (keys(%$lib_n2p))
 	{
-		if ($name =~ /^pods::perl/ || $name =~ /^README$/)
+		if (($name =~ /^(?:pods::)?perl/ && $lib_n2p->{$name} =~ /\.pod$/)|| $name =~ /^README$/)
 		{
 			# observational:
-			# - they seem to live in the pods namespace
+			# - they sometimes live in the pods namespace, other times in the top
 			# - I just happened to find a README in the top in an AP distro
 			#
 			push(@coreNames, $name);
