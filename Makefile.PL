@@ -5,20 +5,15 @@ use ExtUtils::MakeMaker;
 
 my $IS_WIN32 = $^O eq 'MSWin32';
 
-my $downstream_requires =
-	{
-# @@TBD@@
-	};
-	
 my $configure_requires =
 	{
-		%$downstream_requires,
 		'ExtUtils::MakeMaker' => '7.12', 
 	};
 
 my $test_requires =
 	{
-# @@TBD@@
+		'Test::More' => 0,
+		'File::Temp' => 0,
 	};
 
 my $eumm_understands_meta_merge = $ExtUtils::MakeMaker::VERSION ge '6.46';
@@ -59,8 +54,21 @@ WriteMakefile(
 			$eumm_understands_conf_and_test_requires_properly
 				? ()
 				: ( %$configure_requires, %$test_requires ),
+			'Config' => 0,
+			'Cwd' => 0,
+			'Exporter' => 0,
+			'File::Basename' => 0,
+			'File::Copy' => 0,
+			'File::Path' => 0,
+			'File::Spec' => 0,
+			'File::Temp' => 0,
+			'Getopt::Long' => 0,
 			'Grep::Query' => '1.004',
-# @@TBD@@
+			'List::MoreUtils' => 0,
+			'Pod::Find' => 0,
+			'Pod::Html' => 0,
+			'Pod::Simple::Search' => 0,
+			'Pod::Usage' => 0,
 		},
 	dist  =>
 		{
