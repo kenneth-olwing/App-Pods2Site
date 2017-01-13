@@ -4,8 +4,8 @@
 \.settings/
 HACK/
 MANIFEST\.SKIP
-App-TestOnTap-\d+\.\d\d\d\.tar\.gz
-App-TestOnTap-\d+\.\d\d\d/
+App-Pods2Site-\d+\.\d\d\d\.tar\.gz
+App-Pods2Site-\d+\.\d\d\d/
 \.ignore/
 Makefile.old
 tmp/

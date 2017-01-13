@@ -1,6 +1,6 @@
 package App::Pods2Site;
 
-use 5.010;
+use 5.010_001;
 
 use strict;
 use warnings;
