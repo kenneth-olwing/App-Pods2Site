@@ -5,6 +5,12 @@ LICENSE.md
 README.md
 script/pods2site
 t/00-load.t
+t/10-makesite.t
+t/tdata/bin/helloworld
+t/tdata/bin/helloworld.bat
+t/tdata/lib/Bad.pm
+t/tdata/lib/Helloworld.pm
+t/tdata/lib/Helloworld/sub/Helloworld2.pm
 xt/author/manifest.t
 xt/author/pod.t
 xt/standard/placeholder.t
