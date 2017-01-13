@@ -25,6 +25,7 @@ Commandline options and arguments understood for Pods2Site processing
     [ --pragma-include <query> ]
     [ --module-include <query> ]
     [ --css <file> ]
+    [ --style <name> ]
     <sitedirectory>
 
 =head1 OPTIONS AND ARGUMENTS
@@ -87,10 +88,38 @@ Note that this also means that they can't be used when updating a site.
 
 =over
 
+=item B<--style E<lt>nameE<gt>>
+
+Apart from the pod2html mechanism which is not controlled by this app, a couple of things will be generated
+in order to make the pod docs navigatable. At minimum an F<index.html> is generated, but typically also
+at least a TOC and possibly other pages. As this can be done in different fashions, this option allows
+you to select some different styles of viewing the pod docs.
+
+It uses 'style' names to select different internal implementations. The following is currently available:
+ 
+=over
+
+=item * :std
+
+This special name will use the currently defined default style. At present this is 'basicframes-tree-toc'.
+
+=item * basicframes-tree-toc
+
+This style uses a simple frames layout, but the TOC is implemented with the HTML5 'details' element in order
+to create a simple open/close tree control.
+
+=item * basicframes-simple-toc
+
+This style is very similar to the above, but the TOC is rendered as a static long indented list. 
+
+=back
+
 =item B<--css E<lt>fileE<gt>>
 
 If you want to provide your own CSS file, use '--css'. The file given will be copied to the site
-and used in the generated HTML files, and also by passing the '--css' option to the pod2html command.  
+and used in the generated HTML files, and also by passing the '--css' option to the pod2html command.
+
+Note that different 'styles' may generate different things possible to tweak.  
 
 =item B<--bindirectory E<lt>locationE<gt>>
 

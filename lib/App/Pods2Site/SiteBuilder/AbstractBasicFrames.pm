@@ -16,6 +16,7 @@ html
 {
 	font-family: sans-serif;
 }
+
 MYCSS
 }
 
@@ -44,6 +45,10 @@ sub __updateMain
 	$builtBy .= "&emsp;$z ($App::Pods2Site::VERSION)<br/>";
 	$builtBy .= "&emsp;$^X<br/>\n";
 	$builtBy .= "</p>\n";
+	
+	my $style = "<p><strong>Style:</strong><br/>";
+	$style .= "&emsp;" . $self->getStyleName() . "<br/>";
+	$style .= "</p>\n";
 	
 	my $scannedLocations = '';
 	$scannedLocations .= "&emsp;$_<br/>" foreach ($args->getBinDirs(), $args->getLibDirs());
@@ -91,6 +96,7 @@ sub __updateMain
 		
 	<body>
 $builtBy
+$style
 $scannedLocations
 $coreQuery
 $scriptQuery
@@ -155,6 +161,8 @@ sub __updateTOC
 	my $pragma = $self->_getCategoryTOC('Pragmas', $s2n2h->{pragma}, $sitedir);
 	my $module = $self->_getCategoryTOC('Modules', $s2n2h->{module}, $sitedir);
 
+	$self->_rewriteCss($args);
+	
 	my $sysCssName = $self->getSystemCssName();
 
 	my $tocContent = <<TOC;
@@ -200,7 +208,6 @@ sub __updateIndex
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>
 		
-	
 	<frameset rows="10%,*">
 		<frame src="header.html" name="header_frame" />
 		<frameset cols="15%,*">
@@ -222,6 +229,11 @@ INDEX
 sub _getCategoryTOC
 {
 	die("Missing override: _getCategoryTOC()");
+}
+
+sub _rewriteCss
+{
+	# noop
 }
 
 1;

@@ -15,6 +15,7 @@ our @EXPORT_OK =
 			writeData
 			createSpinner
 			writeUTF8File
+			readUTF8File
 		);
 
 use JSON;
@@ -102,6 +103,18 @@ sub writeUTF8File
 	open (my $fh, '> :encoding(UTF-8)', $file) or die("Failed to open '$file': $!\n");
 	print $fh $data;
 	close($fh);  
+}
+
+sub readUTF8File
+{
+	my $file = shift;
+	
+	open (my $fh, '< :encoding(UTF-8)', $file) or die("Failed to open '$file': $!\n");
+	local $/ = undef;
+	my $data = <$fh>;
+	close($fh);  
+	
+	return $data;
 }
 
 1;

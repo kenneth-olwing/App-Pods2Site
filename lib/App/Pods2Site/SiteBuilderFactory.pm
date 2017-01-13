@@ -3,11 +3,11 @@ package App::Pods2Site::SiteBuilderFactory;
 use strict;
 use warnings;
 
-my $STDSTYLE = 'basicframes';
+my $STDSTYLE = 'basicframes-tree-toc';
 my %VALIDSTYLES =
 	(
-		'basicframes' => 'App::Pods2Site::SiteBuilder::BasicFrames',
-		'basicframeshtml5' => 'App::Pods2Site::SiteBuilder::BasicFramesHTML5',
+		'basicframes-simple-toc' => 'App::Pods2Site::SiteBuilder::BasicFramesSimpleTOC',
+		'basicframes-tree-toc' => 'App::Pods2Site::SiteBuilder::BasicFramesTreeTOC',
 	);
 	
 # CTOR

@@ -1,4 +1,4 @@
-package App::Pods2Site::SiteBuilder::BasicFramesHTML5;
+package App::Pods2Site::SiteBuilder::BasicFramesSimpleTOC;
 
 use strict;
 use warnings;
@@ -9,7 +9,6 @@ use App::Pods2Site::Util qw(slashify);
 
 sub _getCategoryTOC
 {
-die("NIY");
 	my $self = shift;
 	my $category = shift;
 	my $n2h = shift;
@@ -27,7 +26,8 @@ die("NIY");
 		}
 	}
 	$self->_genRefs($sitedir, \$toc, $n2h, \%tree);
-	$toc = qq(<details>\n<summary><strong>$category</strong></summary>\n$toc\n</details>\n<hr/>\n) if $toc;
+	chomp($toc);
+	$toc = qq(<strong>$category</strong><br/><br/>\n$toc<br/><hr/>) if $toc;
 }
 
 sub _genRefs
