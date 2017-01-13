@@ -15,6 +15,7 @@ sub _getCssContent
 html
 {
 	font-family: sans-serif;
+	font-size: small;
 }
 
 MYCSS
