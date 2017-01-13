@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+use 5.010_001;
+
 use ExtUtils::MakeMaker;
 
 my $IS_WIN32 = $^O eq 'MSWin32';
@@ -25,7 +27,8 @@ WriteMakefile(
     VERSION_FROM     => 'lib/App/Pods2Site.pm',
     ABSTRACT_FROM    => 'lib/App/Pods2Site.pod',
     LICENSE          => 'artistic_2',
-    EXE_FILES         => [ 'script/pods2site' ],
+    MIN_PERL_VERSION => 5.010_001, 
+    EXE_FILES        => [ 'script/pods2site' ],
 	$eumm_understands_meta_merge
 		? (
 			META_MERGE =>
