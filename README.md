@@ -3,7 +3,7 @@
 **NOTE: This is the master branch of this repo and should not contain anything else than this document.** Active branches are listed below - checkout the relevant one before doing any work!  
 
 ### About
-App::Pods2Site is a Perl module @@TBD@@
+App::Pods2Site is a Perl module to create a HTML site with the documentation of all pods found in a distribution and/or custom locations.
 
 #### Versioning
 The module uses the apparently most prevalent model for module versioning: a floating point value, where the two parts are major and minor respectively, where _major_ increases **may** contain backwards incompatible changes, but _minor_ **must not** do so. There is little other implied meaning in the numbers and visible releases might not always have consecutive numbers (e.g. due to problems during late found problems or repo management issues).
@@ -27,11 +27,13 @@ Once the tagging has been made, a new branch will be cut away, named after the m
 When a sub branch is completed it will be merged back to it's parent, e.g. the '1.001_xxx' branch is eventually deemed ready, and is thus merged back to '1.xxx' for eventual release as '1.002'. The same holds true for '1.xxx' that it will eventually be merged back to 'x'.
 
 ### Releases
-  * N/A
+  * v0.001 on 2017-01-14
 
 ### Active branches
   * **master**  
     For maintenance of this document only.
+  * **0.xxx**  
+    For work aimed at v0.002
   * **x**  
     For work aimed at v1.000
 
