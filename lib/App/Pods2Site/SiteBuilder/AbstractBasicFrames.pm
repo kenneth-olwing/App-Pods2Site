@@ -7,6 +7,8 @@ use base qw(App::Pods2Site::AbstractSiteBuilder);
 
 use App::Pods2Site::Util qw(slashify readData writeData writeUTF8File);
 
+use HTML::Entities;
+
 sub _getCssContent
 {
 	return <<MYCSS;
@@ -198,7 +200,7 @@ sub __updateIndex
 	my $args = shift;
 
 	my $sysCssName = $self->getSystemCssName();
-	my $title = $args->getTitle();
+	my $title = encode_entities($args->getTitle());
 	
 	my $indexContent = <<INDEX;
 <!DOCTYPE html>

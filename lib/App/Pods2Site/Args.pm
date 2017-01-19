@@ -57,7 +57,7 @@ sub getTitle
 {
 	my $self = shift;
 	
-	return @{$self->{libdirs}};
+	return $self->{title};
 }
 
 sub getWorkDir
