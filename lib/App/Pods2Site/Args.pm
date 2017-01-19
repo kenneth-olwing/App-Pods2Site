@@ -53,6 +53,13 @@ sub getLibDirs
 	return @{$self->{libdirs}};
 }
 
+sub getTitle
+{
+	my $self = shift;
+	
+	return @{$self->{libdirs}};
+}
+
 sub getWorkDir
 {
 	my $self = shift;
@@ -122,6 +129,7 @@ sub __parseArgv
 			v => 0,
 			workdirectory => undef,
 			quiet => 0,
+			title => "Pods2Site",
 		);
 		
 	my @specs =
@@ -141,6 +149,7 @@ sub __parseArgv
 			'module-include=s',
 			'css=s',
 			'style=s',
+			'title=s'
 		);
 
 	my $argsPodInput = pod_where( { -inc => 1 }, 'App::Pods2Site::Args');
@@ -294,6 +303,8 @@ sub __parseArgv
 		$self->{css} = $css;
 	}
 
+	$self->{title} = $rawOpts{title};
+	
 	my $sbf = App::Pods2Site::SiteBuilderFactory->new($rawOpts{style});
 	$rawOpts{style} = $sbf->getRealStyle();
 	$self->{sitebuilder} = $sbf->createSiteBuilder();

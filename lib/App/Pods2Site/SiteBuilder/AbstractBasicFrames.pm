@@ -90,7 +90,7 @@ sub __updateMain
 <html>
 
 	<head>
-		<title>pods2site main</title>
+		<title>Pods2Site main</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>
@@ -128,7 +128,7 @@ sub __updateHeader
 <html>
 
 	<head>
-		<title>pods2site header</title>
+		<title>Pods2Site header</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>
@@ -171,7 +171,7 @@ sub __updateTOC
 <html>
 
 	<head>
-		<title>pods2site toc</title>
+		<title>Pods2Site toc</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>
@@ -198,13 +198,14 @@ sub __updateIndex
 	my $args = shift;
 
 	my $sysCssName = $self->getSystemCssName();
-
+	my $title = $args->getTitle();
+	
 	my $indexContent = <<INDEX;
 <!DOCTYPE html>
 <html>
 
 	<head>
-		<title>pods2site index</title>
+		<title>$title</title>
 		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>

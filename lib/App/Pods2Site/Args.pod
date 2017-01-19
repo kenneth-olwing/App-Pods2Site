@@ -25,6 +25,7 @@ Commandline options and arguments understood for Pods2Site processing
     [ --pragma-include <query> ]
     [ --module-include <query> ]
     [ --css <file> ]
+    [ --title <title> ]
     [ --style <name> ]
     <sitedirectory>
 
@@ -70,6 +71,10 @@ To up verbosity, add one or more verbose flags (bundling for singlecharacter opt
 '-v -v -v'). Currently, up to verbosity level 5 is used.
 
 To completely turn off all feedback, use '--quiet'.
+
+=item B<--title E<lt>titleE<gt>>
+
+The title to use for the (index) page. Defaults to 'Pods2Site'.
 
 =item B<--workdirectory E<lt>pathE<gt>>
 
