@@ -67,6 +67,7 @@ WriteMakefile(
 			'File::Temp' => 0,
 			'Getopt::Long' => 0,
 			'Grep::Query' => '1.004',
+			'HTML::Entities' => 0,
 			'JSON' => 0,
 			'List::MoreUtils' => 0,
 			'Pod::Find' => 0,
