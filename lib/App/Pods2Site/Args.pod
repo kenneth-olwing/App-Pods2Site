@@ -72,10 +72,6 @@ To up verbosity, add one or more verbose flags (bundling for singlecharacter opt
 
 To completely turn off all feedback, use '--quiet'.
 
-=item B<--title E<lt>titleE<gt>>
-
-The title to use for the (index) page. Defaults to 'Pods2Site'.
-
 =item B<--workdirectory E<lt>pathE<gt>>
 
 By default, a temporary directory is created to hold intermediate data. This is automatically
@@ -92,6 +88,10 @@ After the site has been created, the options are saved in the site and reused wh
 Note that this also means that they can't be used when updating a site.
 
 =over
+
+=item B<--title E<lt>titleE<gt>>
+
+The title to use for the (index) page. Defaults to 'Pods2Site'.
 
 =item B<--style E<lt>nameE<gt>>
 

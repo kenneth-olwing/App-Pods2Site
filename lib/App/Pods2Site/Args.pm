@@ -119,6 +119,7 @@ sub __parseArgv
 				module-include
 				css
 				style
+				title
 			);
 		
 	my %rawOpts =
@@ -129,7 +130,6 @@ sub __parseArgv
 			v => 0,
 			workdirectory => undef,
 			quiet => 0,
-			title => "Pods2Site",
 		);
 		
 	my @specs =
@@ -303,7 +303,7 @@ sub __parseArgv
 		$self->{css} = $css;
 	}
 
-	$self->{title} = $rawOpts{title};
+	$self->{title} = $rawOpts{title} || 'Pods2Site';
 	
 	my $sbf = App::Pods2Site::SiteBuilderFactory->new($rawOpts{style});
 	$rawOpts{style} = $sbf->getRealStyle();
