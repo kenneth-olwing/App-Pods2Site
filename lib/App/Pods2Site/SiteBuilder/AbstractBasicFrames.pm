@@ -43,37 +43,36 @@ sub __updateMain
 	my $self = shift;
 	my $args = shift;
 
-	my $z = slashify($0);
+	my $z = encode_entities(slashify($0));
+	my $zv = encode_entities($App::Pods2Site::VERSION);
+	my $x = encode_entities($^X);
+	my $xv = encode_entities($]);
 	my $builtBy = "<p><strong>This site built using:</strong><br/>";
-	$builtBy .= "&emsp;$z ($App::Pods2Site::VERSION)<br/>";
-	$builtBy .= "&emsp;$^X ($])<br/>\n";
+	$builtBy .= "&emsp;$z ($zv)<br/>";
+	$builtBy .= "&emsp;$x ($xv)<br/>\n";
 	$builtBy .= "</p>\n";
 	
 	my $style = "<p><strong>Style:</strong><br/>";
-	$style .= "&emsp;" . $self->getStyleName() . "<br/>";
+	$style .= "&emsp;" . encode_entities($self->getStyleName()) . "<br/>";
 	$style .= "</p>\n";
 	
 	my $scannedLocations = '';
 	$scannedLocations .= "&emsp;$_<br/>" foreach ($args->getBinDirs(), $args->getLibDirs());
 	$scannedLocations = "<p><strong>Scanned locations:</strong><br/>$scannedLocations</p>\n";
 	
-	my $coreFilter = $args->getFilter('core');
-	my $coreQuery = $coreFilter ? $coreFilter->getQuery() : '(no core query)';
-	$coreQuery = "<p><strong>Core query:</strong><br/>&emsp;$coreQuery</br></p>";
+	my $coreFilter = encode_entities($args->getFilter('core') || '(no core query)');
+	my $coreQuery = "<p><strong>Core skip query:</strong><br/>&emsp;$coreFilter</br></p>";
 
-	my $scriptFilter = $args->getFilter('script');
-	my $scriptQuery = $scriptFilter ? $scriptFilter->getQuery() : '(no script query)';
-	$scriptQuery = "<p><strong>Script query:</strong><br/>&emsp;$scriptQuery</br></p>";
+	my $scriptFilter = encode_entities($args->getFilter('script') || '(no script query)');
+	my $scriptQuery = "<p><strong>Script skip query:</strong><br/>&emsp;$scriptFilter</br></p>";
 
-	my $pragmaFilter = $args->getFilter('pragma');
-	my $pragmaQuery = $pragmaFilter ? $pragmaFilter->getQuery() : '(no pragma query)';
-	$pragmaQuery = "<p><strong>Pragma query:</strong><br/>&emsp;$pragmaQuery</br></p>";
+	my $pragmaFilter = encode_entities($args->getFilter('pragma') || '(no pragma query)');
+	my $pragmaQuery = "<p><strong>Pragma skip query:</strong><br/>&emsp;$pragmaFilter</br></p>";
 
-	my $moduleFilter = $args->getFilter('module');
-	my $moduleQuery = $moduleFilter ? $moduleFilter->getQuery() : '(no module query)';
-	$moduleQuery = "<p><strong>Module query:</strong><br/>&emsp;$moduleQuery</br></p>";
+	my $moduleFilter = encode_entities($args->getFilter('module') || '(no module query)');
+	my $moduleQuery = "<p><strong>Module skip query:</strong><br/>&emsp;$moduleFilter</br></p>";
 	
-	my $actualCSS = $args->getCSS() || '(no css)';
+	my $actualCSS = encode_entities($args->getCSS() || '(no css)');
 	$actualCSS = "<p><strong>CSS:</strong><br/>&emsp;$actualCSS<br/></p>";
 	
 	my $sitedir = $args->getSiteDir();
@@ -82,7 +81,7 @@ sub __updateMain
 	writeData($sitedir, 'timestamps', $savedTS);
 	
 	my $createdUpdated = '';
-	$createdUpdated .= ('&emsp;' . localtime($_) . "<br/>\n") foreach (@$savedTS);
+	$createdUpdated .= ('&emsp;' . encode_entities(localtime($_)) . "<br/>\n") foreach (@$savedTS);
 	$createdUpdated = "<p><strong>Created/Updated:</strong><br/>$createdUpdated</p>\n";
 	
 	my $sysCssName = $self->getSystemCssName();

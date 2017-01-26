@@ -113,10 +113,10 @@ sub __parseArgv
 			(
 				bindirectory
 				libdirectory
-				script-include
-				core-include
-				pragma-include
-				module-include
+				script-skip
+				core-skip
+				pragma-skip
+				module-skip
 				css
 				style
 				title
@@ -143,10 +143,10 @@ sub __parseArgv
 			'quiet',
 			'bindirectory=s@',
 			'libdirectory=s@',
-			'script-include=s',
-			'core-include=s',
-			'pragma-include=s',
-			'module-include=s',
+			'script-skip=s',
+			'core-skip=s',
+			'pragma-skip=s',
+			'module-skip=s',
 			'css=s',
 			'style=s',
 			'title=s'
@@ -233,64 +233,56 @@ sub __parseArgv
 	}
 	$self->{workdir} = $workdir;
 
-	# create the user include filter for pruning the list of script names later
+	# test the user skip filter for pruning the list of script names later
+	# but only store the query for later use since it will be rewritten as a negated test 
 	#
 	eval
 	{
-		my $inc = $rawOpts{'script-include'};
-		$self->{scriptfilter} =
-			defined($inc)
-				? Grep::Query->new($inc)
-				: undef;
+		$self->{scriptfilter} = $rawOpts{'script-skip'};
+		Grep::Query->new($self->{scriptfilter}) if $self->{scriptfilter};
 	};
 	if ($@)
 	{
-		pod2usage(-message => "Failure creating script-include filter:\n  $@", -exitval => 255, -verbose => 0);
+		pod2usage(-message => "Failure creating script-skip filter:\n  $@", -exitval => 255, -verbose => 0);
 	}
 
-	# create the user include filter for pruning the list of core names later
+	# test the user skip filter for pruning the list of core names later
+	# but only store the query for later use since it will be rewritten as a negated test 
 	#
 	eval
 	{
-		my $inc = $rawOpts{'core-include'};
-		$self->{'corefilter'} =
-			defined($inc)
-				? Grep::Query->new($inc)
-				: undef;
+		$self->{corefilter} = $rawOpts{'core-skip'};
+		Grep::Query->new($self->{corefilter}) if $self->{corefilter};
 	};
 	if ($@)
 	{
-		pod2usage(-message => "Failure creating core-include filter:\n  $@", -exitval => 255, -verbose => 0);
+		pod2usage(-message => "Failure creating core-skip filter:\n  $@", -exitval => 255, -verbose => 0);
 	}
 
-	# create the user include filter for pruning the list of pragma names later
+	# test the user skip filter for pruning the list of pragma names later
+	# but only store the query for later use since it will be rewritten as a negated test 
 	#
 	eval
 	{
-		my $inc = $rawOpts{'pragma-include'};
-		$self->{pragmafilter} =
-			defined($inc)
-				? Grep::Query->new($inc)
-				: undef;
+		$self->{pragmafilter} = $rawOpts{'pragma-skip'};
+		Grep::Query->new($self->{pragmafilter}) if $self->{pragmafilter};
 	};
 	if ($@)
 	{
-		pod2usage(-message => "Failure creating pragma-include filter:\n  $@", -exitval => 255, -verbose => 0);
+		pod2usage(-message => "Failure creating pragma-skip filter:\n  $@", -exitval => 255, -verbose => 0);
 	}
 
-	# create the user include filter for pruning the list of module names later
+	# test the user skip filter for pruning the list of module names later
+	# but only store the query for later use since it will be rewritten as a negated test 
 	#
 	eval
 	{
-		my $inc = $rawOpts{'module-include'};
-		$self->{modulefilter} =
-			defined($inc)
-				? Grep::Query->new($inc)
-				: undef;
+		$self->{modulefilter} = $rawOpts{'module-skip'};
+		Grep::Query->new($self->{modulefilter}) if $self->{modulefilter};
 	};
 	if ($@)
 	{
-		pod2usage(-message => "Failure creating module-include filter:\n  $@", -exitval => 255, -verbose => 0);
+		pod2usage(-message => "Failure creating module-skip filter:\n  $@", -exitval => 255, -verbose => 0);
 	}
 
 	# fix up any css path given by user

@@ -6,6 +6,7 @@ use warnings;
 use App::Pods2Site::Util qw(createSpinner);
 
 use Pod::Simple::Search;
+use Grep::Query qw(qgrep);
 
 # CTOR
 #
@@ -138,7 +139,7 @@ sub __scan
 	{
 		my ($names, $n2p, $fulln2p) = @$vars;
 		my $filter = $args->getFilter($sec);
-		@$names = $filter->qgrep(@$names) if $filter;
+		@$names = qgrep("NOT ( $filter )", @$names) if $filter;
 		$n2p->{$_} = $fulln2p->{$_} foreach (@$names);
 		$self->{n2p}->{$sec} = $n2p;
 	}

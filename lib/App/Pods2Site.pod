@@ -7,7 +7,7 @@ as a simple documentation site for your Perl installation.
 
 =head1 VERSION
 
-Version 0.006
+Version 0.007
 
 =head1 SYNOPSIS
 
@@ -29,8 +29,8 @@ In short, this application will by default create a simple site based on all pod
 in. As modules are updated/installed in the distribution, the application can be run again and efficiently update
 the documentation site.
 
-However, it also allows you to search arbitrary locations for pods, as well as cherrypick among the found pods and just
-include ones of interest to you.
+However, it also allows you to search arbitrary locations for pods, as well as cherrypick among the found pods and
+skip ones of no interest to you.
 
 =head1 FUNCTION
 
