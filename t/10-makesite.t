@@ -14,7 +14,7 @@ ok($tmpdir, "Created tempdir '$tmpdir'\n");
 
 my $site1 = "$tmpdir/site1";
 
-my $ret = App::Pods2Site::main('--bindir', "$Bin/tdata/bin", '--libdir', "$Bin/tdata/lib", '--module-include', 'not eq(Bad)', $site1);
+my $ret = App::Pods2Site::main('--bindir', "$Bin/tdata/bin", '--libdir', "$Bin/tdata/lib", '--module-skip', 'eq(Bad)', $site1);
 is($ret, 0, "Created $site1");
 
 my @expectedSite1 =
