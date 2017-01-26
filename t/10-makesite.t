@@ -32,7 +32,7 @@ ok(!-e $_, "Not expected '$_'") foreach (@notExpectedSite1);
 
 my $site2 = "$tmpdir/site2";
 
-$ret = App::Pods2Site::main('--bindir', "$Bin/tdata/bin", '--libdir', "$Bin/tdata/lib", '--module-include', 'eq(Bad)', $site2);
+$ret = App::Pods2Site::main('--bindir', "$Bin/tdata/bin", '--libdir', "$Bin/tdata/lib", '--module-skip', 'not eq(Bad)', $site2);
 is($ret, 0, "Created $site2");
 
 my @expectedSite2 =
