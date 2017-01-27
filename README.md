@@ -34,6 +34,7 @@ When a sub branch is completed it will be merged back to it's parent, e.g. the '
   * v0.005 on 2017-01-19
   * v0.006 on 2017-01-24
   * v0.007 on 2017-01-26
+  * v0.008 on 2017-01-27
   
 ### Active branches
   * **master**  
