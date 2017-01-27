@@ -81,7 +81,7 @@ sub __updateMain
 	writeData($sitedir, 'timestamps', $savedTS);
 	
 	my $createdUpdated = '';
-	$createdUpdated .= ('&emsp;' . encode_entities(localtime($_)) . "<br/>\n") foreach (@$savedTS);
+	$createdUpdated .= ('&emsp;' . encode_entities(scalar(localtime($_))) . "<br/>\n") foreach (@$savedTS);
 	$createdUpdated = "<p><strong>Created/Updated:</strong><br/>$createdUpdated</p>\n";
 	
 	my $sysCssName = $self->getSystemCssName();
