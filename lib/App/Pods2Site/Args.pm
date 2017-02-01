@@ -7,7 +7,7 @@ package App::Pods2Site::Args;
 use strict;
 use warnings;
 
-use App::Pods2Site::Util qw(slashify readData writeData);
+use App::Pods2Site::Util qw(slashify readData writeData expandAts);
 use App::Pods2Site::SiteBuilderFactory;
 
 use Getopt::Long qw(GetOptionsFromArray :config require_order no_ignore_case bundling);
@@ -159,6 +159,7 @@ sub __parseArgv
 	# 
 	eval
 	{
+		@argv = expandAts('.', @argv);
 		local $SIG{__WARN__} = sub { die(@_) };
 		GetOptionsFromArray(\@argv, \%rawOpts, @specs)
 	};

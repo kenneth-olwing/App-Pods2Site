@@ -34,9 +34,53 @@ Commandline options and arguments understood for Pods2Site processing
 All options can be abbreviated, as long as they are unambiguous. Option matching is case
 sensitive. Forcibly end option parsing using '--'.
 
+=head3 EXPANDING FILES IN ARGUMENT LIST
+
+The command line may at any place contain arguments of the form F<@filename>, and which means that the F<filename>
+will be read for arguments to insert in place. This will help if the command line is very long or is just nicely
+persisted for reuse.
+
+Further, this will work recursively, i.e. a any resulting argument of the same form, will be read. If the filename
+is relative, it's assumed relative to the directory the previous file was in.
+
+The example command line C<pods2site --verbose @myargs> will be expanded by reading the F<myargs> file (in the current
+directory, obviously). The F<myargs> file may contain a line of C<@/some/path/to/globalargs>, and assuming that file in
+turn contains C<@extraargs>, that file is expected to exist as F</some/path/to/extraargs>.
+
+Each line in such a file will become a single argument using the following rules:
+
 =over
 
-=item B<Information options>
+=item * Line continuation
+
+To avoid physical lines in the file to be extremely long, it can be continued on the next
+physical (to any length) by ending the line with a backslash (\).
+
+  Example:
+    fee \
+    fie \
+    foo
+
+Will become the argument 'fee fie foo'.
+
+=item * Comments
+
+Any line (after completed line continuation and not counting inital whitespace) having
+a '#' as the first character, will be ignored as being a comment.
+
+=item * Trimming
+
+Any beginning and ending whitespace will be trimmed away.
+
+=item * Empty lines
+
+Any empty line will be ignored.
+ 
+=back
+
+=over
+
+=item B<INFORMATION OPTIONS>
 
 If any of these options are given, the rest of the command line is ignored.
 
