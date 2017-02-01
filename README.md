@@ -27,20 +27,13 @@ Once the tagging has been made, a new branch will be cut away, named after the m
 When a sub branch is completed it will be merged back to it's parent, e.g. the '1.001_xxx' branch is eventually deemed ready, and is thus merged back to '1.xxx' for eventual release as '1.002'. The same holds true for '1.xxx' that it will eventually be merged back to 'x'.
 
 ### Releases
-  * v0.001 on 2017-01-14
-  * v0.002 on 2017-01-15
-  * v0.003 on 2017-01-19
-  * v0.004 on 2017-01-19
-  * v0.005 on 2017-01-19
-  * v0.006 on 2017-01-24
-  * v0.007 on 2017-01-26
-  * v0.008 on 2017-01-27
+  * v0.xxx (ongoing)
   
 ### Active branches
   * **master**  
     For maintenance of this document only.
   * **0.xxx**
-    For work aimed at v0.007
+    For work aimed at v0.xxx
   * **x**  
     For work aimed at v1.000
 
