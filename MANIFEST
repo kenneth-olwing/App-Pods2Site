@@ -4,6 +4,7 @@ MANIFEST			This list of files
 LICENSE.md
 README.md
 script/pods2site
+author/patch-next-version.pl
 t/00-load.t
 t/10-makesite.t
 t/tdata/bin/helloworld
