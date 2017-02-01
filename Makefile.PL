@@ -45,6 +45,10 @@ WriteMakefile(
 									url => 'https://github.com/kenneth-olwing/App-Pods2Site.git',
 									web => 'https://github.com/kenneth-olwing/App-Pods2Site'
 								}
+						},
+					no_index =>
+						{
+							directory => [ 'author' ],
 						}
 				}
 			)

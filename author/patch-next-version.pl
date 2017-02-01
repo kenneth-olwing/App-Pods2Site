@@ -79,9 +79,9 @@ die("Failed finding make config:\n$mkcfg") if $?;
 die("Unexpected mkcfg: '$mkcfg'\n") unless $mkcfg =~ /^make='([^']+)'/;
 my $mkcmd = $1;
 
-print "Building dist...\n";
-my @dist = qx($mkcmd dist 2>&1);
-die("Failed making dist:\n@dist") if $?;
+my $expectedDist = "App-Pods2Site-$nextVersion.tar.gz";
+system("$mkcmd dist 2>&1");
+die("Failed making dist '$expectedDist'\n") if ($? || !-f $expectedDist);
 
 my @msg = readAll($msgfile);
 $msg[0] =~ /(\r?\n)/;
@@ -104,12 +104,12 @@ splice(@changes, 2, 0, "$nextVersion\t$today$changesle", @msg, $changesle);
 writeAll('Changes', @changes);
 
 print "The current branch is '$br[0]' with next version = '$nextVersion'\n";
-print "Ready to commit => tag => push? ";
+print "Ready to commit => tag => push => upload? ";
 my $a = <STDIN>;
 chomp($a);
 if (lc($a) eq 'yes')
 {
-	print "Committing, tagging and pushing...\n";
+	print "Committing, tagging, pushing and uploading...\n";
 	
 	system("git commit -a -F $msgfile2 2>&1");
 	die("Failed commit") if $?;
@@ -119,6 +119,9 @@ if (lc($a) eq 'yes')
 	
 	system("git push origin $br[0] $nextTag 2>&1");
 	die("Failed push\n") if $?;
+	
+	system("cpan-upload -v --user knth $expectedDist");
+	die("Failed upload\n") if $?;
 }
 else
 {
