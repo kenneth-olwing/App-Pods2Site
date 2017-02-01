@@ -16,7 +16,7 @@ my %files =
 	(
 		'README.md' => 1,
 		'lib/App/Pods2Site.pm' => 8,
-		'lib/App/Pods2Site.pm' => 10
+		'lib/App/Pods2Site.pod' => 10
 	);
 
 foreach my $fn (keys(%files))
