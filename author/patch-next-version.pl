@@ -17,8 +17,9 @@ chdir($toplevel) or die("Failed to chdir to $toplevel: $!\n");
 my %files = 
 	(
 		'README.md' => 1,
-		'lib/App/Pods2Site.pm' => 8,
-		'lib/App/Pods2Site.pod' => 10
+		'extras/Java/TAPGenerator/src/main/java/org/cpan/knth/TAPGenerator.java' => 11,
+		'lib/App/TestOnTap.pm' => 8,
+		'lib/App/TestOnTap.pod' => 10
 	);
 
 foreach my $fn (keys(%files))
@@ -43,8 +44,8 @@ my $mj = $1;
 my $min = $2;
 my $isdev = defined($min) ? 1 : 0;
 
-my @fetch = qx(git fetch --all -q 2>&1);
-die("Failed fetch:\n@fetch") if $?;
+system("git fetch --all -q 2>&1");
+die("Failed fetch") if $?;
 
 my @tags = qx(git tag -l 2>&1);
 die("Failed tags:\n@tags") if $?;
@@ -76,31 +77,26 @@ die("Failed creating makefile:\n@mk") if $?;
 
 my $mkcfg = qx(perl -V:make 2>&1);
 die("Failed finding make config:\n$mkcfg") if $?;
-die("Unexpected mkcfg: '$mkcfg'\n") unless $mkcfg =~ /^make='([^']+)'/;
+die("Unexpected mkcfg: '$mkcfg'\n") unless $mkcfg =~ /^make='([^']+)'/; #'
 my $mkcmd = $1;
 
-my $expectedDist = "App-Pods2Site-$nextVersion.tar.gz";
+my $expectedDist = "App-TestOnTap-$nextVersion.tar.gz";
 system("$mkcmd dist 2>&1");
 die("Failed making dist '$expectedDist'\n") if ($? || !-f $expectedDist);
 
 my @msg = readAll($msgfile);
-$msg[0] =~ /(\r?\n)/;
-my $msgle = $1;
-my $subj = "Release $nextVersion$msgle";
-writeAll($msgfile2, $subj, $msgle, @msg);
+my $subj = "Release $nextVersion";
+writeAll($msgfile2, $subj, "", @msg);
 
 my @tm = localtime();
 my $today = sprintf("%d-%02d-%02d\n", $tm[5] += 1900, $tm[4] + 1, $tm[3]);
 
 my @changes = readAll('Changes');
-$changes[0] =~ /(\r?\n)/;
-my $changesle = $1;
 foreach (@msg)
 {
 	$_ = "\t$_" if $_;
-	$_ =~ s/\Q$msgle\E/$changesle/;
 }
-splice(@changes, 2, 0, "$nextVersion\t$today$changesle", @msg, $changesle);
+splice(@changes, 2, 0, "$nextVersion\t$today", @msg, "");
 writeAll('Changes', @changes);
 
 print "The current branch is '$br[0]' with next version = '$nextVersion'\n";
@@ -146,6 +142,7 @@ sub readAll
 	local $\ = undef;
 	my @c = <$fh>;
 	close($fh);
+	chomp(@c);
 	
 	return @c;
 }
@@ -157,6 +154,6 @@ sub writeAll
 
 	open(my $fh, '>', $fn) or die("Failed to open '$fn': $!\n");
 	binmode($fh);
-	print $fh @c;
+	print $fh "$_\n" foreach (@c);
 	close($fh);
 }
