@@ -79,7 +79,7 @@ die("Failed finding make config:\n$mkcfg") if $?;
 die("Unexpected mkcfg: '$mkcfg'\n") unless $mkcfg =~ /^make='([^']+)'/; #'
 my $mkcmd = $1;
 
-my $expectedDist = "App-TestOnTap-$nextVersion.tar.gz";
+my $expectedDist = "App-Pods2Site-$nextVersion.tar.gz";
 system("$mkcmd dist 2>&1");
 die("Failed making dist '$expectedDist'\n") if ($? || !-f $expectedDist);
 
