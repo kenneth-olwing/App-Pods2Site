@@ -1,5 +1,9 @@
 Revision history for App-Pods2Site
 
+0.013	2017-08-08
+
+	Upgrade to latest Grep::Query
+
 0.012	2017-08-07
 
 	Adjust handling of core pods
