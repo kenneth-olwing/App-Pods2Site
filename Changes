@@ -1,5 +1,9 @@
 Revision history for App-Pods2Site
 
+1.001	2019-08-22
+
+	Make a proper guy out of us with a shiny version! (no real code changes)
+
 0.016	2019-08-22
 
 	* A typo in the default lib location config names caused a lib location to be left out

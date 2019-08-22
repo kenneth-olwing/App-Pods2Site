@@ -1,4 +1,4 @@
-# App::Pods2Site 1.000
+# App::Pods2Site 1.001
 
 This module provides a command to easily create a simple HTML site from pods, by
 default the core docs, scripts, pragmas and other modules in the Perl distro
