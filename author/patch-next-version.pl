@@ -84,7 +84,7 @@ foreach my $fn (keys(%files))
 	$contents[$idx] =~ s/$currentVersionRE/$nextVersion/;
 	writeAll($fn, @contents);
 }
-die;
+
 my @msg = readAll($msgfile);
 my $subj = "Release $nextVersion";
 writeAll($msgfile2, $subj, "", @msg);
