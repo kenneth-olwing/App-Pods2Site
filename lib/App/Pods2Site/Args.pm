@@ -563,7 +563,7 @@ sub __getDefaultLibLocations
 			qw
 				(
 					installsitearch
-					installsiteslib
+					installsitelib
 					installvendorarch
 					installvendorlib
 					installarchlib
