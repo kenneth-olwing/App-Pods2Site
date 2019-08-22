@@ -4,6 +4,10 @@ App::Pods2Site::Args
 
 Commandline options and arguments understood for Pods2Site processing
 
+=head1 VERSION
+
+Version 0.015
+
 =head1 SYNOPSIS
 
  pods2site

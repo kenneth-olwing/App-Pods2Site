@@ -7,6 +7,10 @@ package App::Pods2Site::Args;
 use strict;
 use warnings;
 
+our $VERSION = '0.015';
+my $version = $VERSION;
+$VERSION = eval $VERSION;
+
 use App::Pods2Site::Util qw(slashify trim readData writeData expandAts $IS_PACKED $IS_WINDOWS $SHELL_ARG_DELIM $PATH_SEP);
 use App::Pods2Site::SiteBuilderFactory;
 

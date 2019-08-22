@@ -17,7 +17,20 @@ chdir($toplevel) or die("Failed to chdir to $toplevel: $!\n");
 my %files = 
 	(
 		'README.md' => 1,
-		'lib/App/Pods2Site.pm' => 8,
+		'lib/App/Pods2Site/SiteBuilder/AbstractBasicFrames.pm' => 8,
+		'lib/App/Pods2Site/SiteBuilder/BasicFramesSimpleTOC.pm' => 8,
+		'lib/App/Pods2Site/SiteBuilder/BasicFramesTreeTOC.pm' => 8,
+		'lib/App/Pods2Site/SiteBuilder/None.pm' => 8,
+		'lib/App/Pods2Site/_Args.pod' => 8,
+		'lib/App/Pods2Site/AbstractSiteBuilder.pm' => 8,
+		'lib/App/Pods2Site/Args.pm' => 8,
+		'lib/App/Pods2Site/Args.pod' => 8,
+		'lib/App/Pods2Site/Pod2HTML.pm' => 8,
+		'lib/App/Pods2Site/PodCopier.pm' => 8,
+		'lib/App/Pods2Site/PodFinder.pm' => 8,
+		'lib/App/Pods2Site/SiteBuilderFactory.pm' => 8,
+		'lib/App/Pods2Site/Util.pm' => 8,
+		'lib/App/Pods2Site.pm' => 10,
 		'lib/App/Pods2Site.pod' => 10
 	);
 
@@ -25,7 +38,7 @@ foreach my $fn (keys(%files))
 {
 	die("Failed to find '$fn' in '$toplevel'\n") unless -f "$toplevel/$fn";
 }
-
+die;
 # verify we're clean
 #
 my @status = qx(git status --porcelain --ignored 2>&1);
