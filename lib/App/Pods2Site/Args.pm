@@ -7,7 +7,7 @@ package App::Pods2Site::Args;
 use strict;
 use warnings;
 
-our $VERSION = '0.015';
+our $VERSION = '0.016';
 my $version = $VERSION;
 $VERSION = eval $VERSION;
 
