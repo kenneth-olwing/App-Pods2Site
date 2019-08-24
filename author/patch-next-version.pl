@@ -73,9 +73,13 @@ my $currentVersionRE = qr(\Q$currentVersion\E);
 my $nextVersion = sprintf("${mj}.%s%03d", ($isdev ? "${min}_" : ''), $2 + 1);
 my $nextTag = "v$nextVersion";
 
+print "Next version is '$nextVersion'\n";
 foreach my $fn (keys(%files))
 {
 	my $line = $files{$fn};
+
+	print "Changing 'version' in $fn...\n";
+
 	$fn = "$toplevel/$fn";
 	
 	my $idx = $line - 1;
