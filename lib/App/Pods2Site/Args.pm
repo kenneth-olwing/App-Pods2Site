@@ -313,7 +313,7 @@ sub __parseArgv
 		$self->{css} = $css;
 	}
 
-	$rawOpts{title} = $rawOpts{title} || ($Config{myuname} ? "Pods2Site : $Config{myuname}" : 'Pods2Site');
+	$rawOpts{title} = $rawOpts{title} || ($Config{myuname} ? $Config{myuname} : 'Pods2Site');
 	$self->{title} = $rawOpts{title};
 	
 	$self->{style} = $rawOpts{style};

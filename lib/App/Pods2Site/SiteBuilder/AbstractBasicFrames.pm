@@ -49,15 +49,6 @@ sub __updateMain
 	my $args = shift;
 	my $partCounts = shift;
 
-	my $z = encode_entities(slashify($0));
-	my $zv = encode_entities($App::Pods2Site::VERSION);
-	my $x = encode_entities($^X);
-	my $xv = encode_entities($]);
-	my $builtBy = "<p><strong>This site built using:</strong><br/>";
-	$builtBy .= "&emsp;$z ($zv)<br/>";
-	$builtBy .= "&emsp;$x ($xv)<br/>\n";
-	$builtBy .= "</p>\n";
-	
 	my $scannedLocations = '';
 	foreach my $loc ($args->getBinDirs(), $args->getLibDirs())
 	{
@@ -70,7 +61,7 @@ sub __updateMain
 	$style .= "&emsp;" . encode_entities($self->getStyleName()) . "<br/>";
 	$style .= "</p>\n";
 	
-	my $actualCSS = encode_entities($args->getCSS() || '(default css)');
+	my $actualCSS = encode_entities($args->getCSS() || '(default)');
 	$actualCSS = "<p><strong>CSS:</strong><br/>&emsp;$actualCSS<br/></p>";
 	
 	my $groupDefs = '';
@@ -97,6 +88,15 @@ sub __updateMain
 	$createdUpdated .= ('&emsp;' . encode_entities(scalar(localtime($_))) . "<br/>\n") foreach (@$savedTS);
 	$createdUpdated = "<p><strong>Created/Updated:</strong><br/>$createdUpdated</p>\n";
 	
+	my $z = encode_entities(slashify($0));
+	my $zv = encode_entities($App::Pods2Site::VERSION);
+	my $x = encode_entities($^X);
+	my $xv = encode_entities($]);
+	my $builtBy = "<p><strong>This site built using:</strong><br/>";
+	$builtBy .= "&emsp;$z ($zv)<br/>";
+	$builtBy .= "&emsp;$x ($xv)<br/>\n";
+	$builtBy .= "</p>\n";
+	
 	my $sysCssName = $self->getSystemCssName();
 	
 	my $mainContent = <<MAIN;
@@ -110,12 +110,12 @@ sub __updateMain
 	</head>
 		
 	<body>
-$builtBy
 $scannedLocations
 $style
 $actualCSS
 $groupDefs
 $createdUpdated
+$builtBy
 	</body>
 	
 </html>
@@ -132,6 +132,7 @@ sub __updateHeader
 	my $self = shift;
 	my $args = shift;
 
+	my $title = encode_entities($args->getTitle());
 	my $sysCssName = $self->getSystemCssName();
 
 	my $headerContent = <<MAIN;
@@ -145,7 +146,7 @@ sub __updateHeader
 	</head>
 		
 	<body>
-		<h2><a href="main.html" target="main_frame">Pods2Site - Perl documentation from pods to html</a></h2>
+		<h2><a href="main.html" target="main_frame">Pods2Site - $title</a></h2>
 	</body>
 	
 </html>
@@ -217,7 +218,7 @@ sub __updateIndex
 		<link href="$sysCssName.css" rel="stylesheet"/>
 	</head>
 		
-	<frameset rows="10%,*">
+	<frameset rows="8%,*">
 		<frame src="header.html" name="header_frame" />
 		<frameset cols="15%,*">
 			<frame src="toc.html" name="toc_frame" />
