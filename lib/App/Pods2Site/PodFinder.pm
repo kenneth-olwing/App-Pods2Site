@@ -3,7 +3,7 @@ package App::Pods2Site::PodFinder;
 use strict;
 use warnings;
 
-our $VERSION = '1.001';
+our $VERSION = '1.002';
 my $version = $VERSION;
 $VERSION = eval $VERSION;
 
