@@ -32,7 +32,7 @@ my %files =
 		'lib/App/Pods2Site/Util.pm' => 6,
 		'lib/App/Pods2Site.pm' => 8,
 		'lib/App/Pods2Site.pod' => 10,
-		'script/pods2site' => 
+		'script/pods2site' => 6
 	);
 
 foreach my $fn (keys(%files))
