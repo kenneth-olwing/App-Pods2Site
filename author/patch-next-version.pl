@@ -57,7 +57,7 @@ die("Invalid branch: '$br[0]'") unless $br[0] =~ /^(\d+)\.(?:(\d\d\d)_)?xxx$/;
 my $mj = $1;
 my $min = $2;
 my $isdev = defined($min) ? 1 : 0;
-die("min='$min'. isdev='$isdev'\n");
+
 #system("git fetch --all -q 2>&1");
 #die("Failed fetch") if $?;
 
