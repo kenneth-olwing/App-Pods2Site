@@ -59,7 +59,7 @@ my $min = $2;
 my $isdev = defined($min) ? 1 : 0;
 
 system("git fetch --all -q 2>&1");
-die("Failed fetch") if $?;
+#die("Failed fetch") if $?;
 
 my @tags = qx(git tag -l 2>&1);
 die("Failed tags:\n@tags") if $?;
