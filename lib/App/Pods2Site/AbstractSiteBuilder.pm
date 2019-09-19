@@ -3,7 +3,7 @@ package App::Pods2Site::AbstractSiteBuilder;
 use strict;
 use warnings;
 
-our $VERSION = '1.002_000_000';
+our $VERSION = '1.002_001_000';
 my $version = $VERSION;
 $VERSION = eval $VERSION;
 

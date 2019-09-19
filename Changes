@@ -1,5 +1,9 @@
 Revision history for App-Pods2Site
 
+1.002_001	2019-09-19
+
+	prep for newer Pod::Simple
+
 1.002	2019-08-24
 
 	Minor layout changes of header/main page
