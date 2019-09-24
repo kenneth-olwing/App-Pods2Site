@@ -310,8 +310,8 @@ sub __parseArgv
 	{
 		eval
 		{
-			die("Group definition not in form 'name=query': '$rawGroupDef'\n") unless $rawGroupDef =~ /^([^=]+)=(.+)/s;
-			my ($name, $query) = (trim($1), trim($2));
+			die("Group definition not in form 'name=query': '$rawGroupDef'\n") unless $rawGroupDef =~ /^([^=]*)=(.+)/s;
+			my ($name, $query) = (trim($1 || ''), trim($2));
 			die("Group '$name' multiply defined\n") if $groupsSeen{$name};
 			$groupsSeen{$name} = 1;
 			push(@groupDefs, { name => $name, query => Grep::Query->new($query) });

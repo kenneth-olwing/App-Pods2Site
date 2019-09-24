@@ -41,7 +41,17 @@ sub _getCategoryTOC
 	}
 	$self->_genRefs($sitedir, \$toc, $podInfo, \%tree, -1);
 	chomp($toc);
-	$toc = qq(<details class="toc-top">\n<summary class="toc-top">$groupName</summary>\n$toc\n</details>) if $toc;
+	if ($toc)
+	{
+		if ($groupName)
+		{
+			$toc = qq(<details class="toc-top">\n<summary class="toc-top">$groupName</summary>\n$toc\n</details>);
+		}
+		else
+		{
+			$toc =~ s/toc-0/toc-top/;
+		}
+	}
 	
 	return $toc;
 }

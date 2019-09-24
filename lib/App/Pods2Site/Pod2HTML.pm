@@ -96,7 +96,7 @@ sub __updateHTML
 						"--infile=$podfile",
 						"--outfile=$outfile",
 						"--podroot=$podRoot",
-						"--podpath=$podpath",
+						$podpath ? ("--podpath=$podpath") : (),
 						"--htmlroot=$htmlroot",
 						"--css=$htmlroot/../pods2site.css",
 					);
