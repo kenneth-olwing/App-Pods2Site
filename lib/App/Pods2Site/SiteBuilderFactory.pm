@@ -11,7 +11,7 @@ require App::Pods2Site::SiteBuilder::None;
 require App::Pods2Site::SiteBuilder::BasicFramesSimpleTOC;
 require App::Pods2Site::SiteBuilder::BasicFramesTreeTOC;
 
-my $STDSTYLE = 'basicframes-simple-toc';
+my $STDSTYLE = 'basicframes-tree-toc';
 my %VALIDSTYLES =
 	(
 		'none' => 'App::Pods2Site::SiteBuilder::None',
