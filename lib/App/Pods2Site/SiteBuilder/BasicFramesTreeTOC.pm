@@ -45,11 +45,18 @@ sub _getCategoryTOC
 	{
 		if ($groupName)
 		{
-			$toc = qq(<details class="toc-top">\n<summary class="toc-top">$groupName</summary>\n$toc\n</details>);
+			$toc = qq(<details class="toc-top">\n\t\t\t<summary class="toc-top">$groupName</summary>\n\t\t\t\t$toc\n\t\t</details>\n);
 		}
 		else
 		{
-			$toc =~ s/toc-0/toc-top/;
+			my $newtoc = '';
+			while ($toc =~ /class="toc-(top|\d+)"/g)
+			{
+				my $lvl = ($1 == 0) ? 'top' : $1 - 1;
+				$newtoc .= substr( $toc, 0, $-[0] ) . qq(class="toc-$lvl");
+				$toc = substr( $toc, $+[0] );
+			}
+			$toc = "$newtoc$toc"; 
 		}
 	}
 	
