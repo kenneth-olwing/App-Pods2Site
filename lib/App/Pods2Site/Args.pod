@@ -243,7 +243,12 @@ The pods may be separated into groups. By default a grouping loosely similar to 
 will be used, e.g. 'Core', 'Scripts', 'Pragmas' and 'Modules'.
 
 Any number of groups can be specified, and the query will be able to use fields to select which pods go where
-(see L<Grep::Query> for details of the query language). 
+(see L<Grep::Query> for details of the query language).
+
+It's allowable to have an unnamed group (e.g. E<lt>queryE<gt>) which means matches will not be under any group name
+and thus left justified directly in the TOC. It is recommended to only match to document with single level names
+e.g. just the 'Foo' document rather than the 'Bar::Foo' document as the latter would produce an effect looking like
+a group of 'Bar'.
 
 =over
 
