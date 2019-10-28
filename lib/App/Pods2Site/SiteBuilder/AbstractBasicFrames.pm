@@ -62,7 +62,7 @@ sub __updateHeader
 	else
 	{
 		$mainspan = qq(<span style="float:left"><a href="$mainpage" target="main_frame" style="font-size:250%;font-weight:bold">$title</a></span>);
-		$aboutspan = qq(<span style="float:right"><a href="about.html" target="main_frame" style="font-size:250%;font-weight:bold">(about)</a></span>);
+		$aboutspan = qq(<span style="float:right"><a href="about.html" target="main_frame" style="font-size:125%;font-weight:bold">about</a></span>);
 	}
 
 	my $headerContent = <<HDR;
@@ -161,8 +161,8 @@ sub __updateAbout
 		$style
 		$actualCSS
 		$groupDefs
-		$builtBy
 		$createdUpdated
+		$builtBy
 	</body>
 	
 </html>
